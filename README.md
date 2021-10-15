@@ -18,21 +18,18 @@
 
 ## 代码开发流程
 
-1)基于master分支创建本地分支，比如创建dev分支
+- 基于master分支创建本地分支，比如创建dev分支
+  - git checkout -b dev
+- 本地开发代码并且测试
 
-git checkout -b dev
+- 本地提交修改到dev
+  - git add .
+  - git commit -m "{增加的功能信息}“
 
-2)本地开发代码测试完毕后
-
-3) git add .
-
-4) git commit -m "{增加的功能信息}"
-
-5) git push origin dev
-
-6) 然后从origin dev分支pull request 到origin master分支
-
-最后由工具管理员负责merge代码，并且完成部署到线上的操作
+- push 本地dev的修改到远程dev
+  - git push origin dev
+- 然后从origin dev分支**pull request 到origin master分支**
+- 最后由工具管理员负责merge代码，并且完成部署到线上的操作
 
 ##  数据库表相关
 
