@@ -8,11 +8,11 @@
 
 控制台如图所示，就是项目导入并且启动成功
 
-![微信截图_20211015084307](C:\Users\maodazhan\Desktop\微信截图_20211015084307.png)
+[![51TUQU.md.png](https://z3.ax1x.com/2021/10/15/51TUQU.md.png)](https://imgtu.com/i/51TUQU)
 
 并且打开浏览器 输入 localhost:8080/annotation/index
 
-![微信截图_20211015090857](C:\Users\maodazhan\Desktop\微信截图_20211015090857.png)
+[![51TGiq.md.png](https://z3.ax1x.com/2021/10/15/51TGiq.md.png)](https://imgtu.com/i/51TGiq)
 
 
 
@@ -83,12 +83,14 @@ CoNLL格式语料转sql文件：tosql.py
 
 4. 执行生成的SQL文件即可；
 
-   ![image-20211015090253954](C:\Users\maodazhan\AppData\Roaming\Typora\typora-user-images\image-20211015090253954.png)
+   
 
-![image-20211015090300696](C:\Users\maodazhan\AppData\Roaming\Typora\typora-user-images\image-20211015090300696.png)
+[![51T2QO.md.png](https://z3.ax1x.com/2021/10/15/51T2QO.md.png)](https://imgtu.com/i/51T2QO)
+
+[![51T7fP.md.png](https://z3.ax1x.com/2021/10/15/51T7fP.md.png)](https://imgtu.com/i/51T7fP)
 
 ### 导出数据库
 
 运行daochu.py文件，修改查询语句和输出文件名称。
 
-![image-20211015090337795](C:\Users\maodazhan\AppData\Roaming\Typora\typora-user-images\image-20211015090337795.png)
+[![517PpV.md.png](https://z3.ax1x.com/2021/10/15/517PpV.md.png)](https://imgtu.com/i/517PpV)
