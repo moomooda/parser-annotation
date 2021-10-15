@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>历史查询</title>
+    <link rel="shortcut icon" href="images/logo.ico" />
+    <link href="style.css" rel="stylesheet" media="all" />
+    <link href="css/buttons.css" rel="stylesheet" media="all" />
+    <link href="" rel="stylesheet" title="style" media="all" />
+    <link rel="stylesheet" href="css/contextmenu.css" />
+    <link rel="stylesheet" href="css/mul_sele.css" />
+    <link rel="stylesheet" href="css/pagination.css" />
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="js/jquery.pagination.js"></script>
+    <script type="text/javascript" src="js/superfish.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.7.2.js"></script>
+    <script type="text/javascript" src="js/tooltip.js"></script>
+    <script type="text/javascript" src="js/tablesorter.js"></script>
+    <script type="text/javascript" src="js/tablesorter-pager.js"></script>
+    <script type="text/javascript" src="js/cookie.js"></script>
+    <script type="text/javascript" src="js/custom.js"></script>
+    <script type="text/javascript" src="js/mult_sel_index.js"></script>
+    <script type="text/javascript" src="js/iconfont.js"></script>
+    <script type="text/javascript" src="js/cookies.js"></script>
+    <style type="text/css">
+    .icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div id="sitename">
+            <a href="index.html" class="logo float-left" title="platform">语义依存标注平台</a>
+            <div class="button float-right" style="padding-right: 670px">
+                <span id="hello">你好，<a id="theme" href="#" title="Logged in as admin"></a></span>
+                &nbsp|&nbsp&nbsp <a id="logout" href="#" title="Logout">注销</a>
+            </div>
+        </div>
+        <ul id="navigation" class="sf-navbar" style="padding-right: 700px">
+            <li>
+                <a href="index">主页</a>
+            </li>
+        </ul>
+    </div>
+    <div class="clearfix"></div>
+    <div id="page-wrapper">
+        <div id="main-wrapper">
+            <form class="layui-form">
+                <div class="layui-form-inline">
+                    <label class="layui-form-label">选择批次</label>
+                    <div class="layui-input-block" style="width:100px">
+                        <select id="batch_select" name="batch_select" lay-filter="batch">
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-inline">
+                    <label class="layui-form-label">选择状态</label>
+                    <div class="layui-input-block" style="width:100px">
+                        <select id="status_select" name="status_select" lay-filter="status">
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div class="layui-input-block">
+                <input style="width:300px" class="layui-input" name="search_keyword" placeholder="输入关键字" id="search_keyword" autocomplete="off">
+            </div>
+            <div class="layui-input-block">
+                <button id="search_button" class="layui-btn layui-btn-normal" data-type="reload">搜索</button>
+            </div>
+            <table class="layui-hide" id="demo" lay-filter="test">
+            </table>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="
+                detail">查看</a>
+            </script>
+        </div>
+    </div>
+    <script src="layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript">
+    function load_data() {
+        var theme = localStorage.getItem("userName");
+        if (theme == null || theme == "") {
+            $("#theme").html('请登录');
+        } else {
+            $("#theme").html(theme);
+        }
+    }
+
+    $(document).ready(function() {
+        load_data();
+        layui.use(['laypage', 'table', 'form'], function() {
+            var form = layui.form,
+                $ = layui.$,
+                table = layui.table;
+            $.ajax({
+                type: 'GET',
+                url: 'getBatch',
+                async: false,
+                data: {
+                    userId: Number(localStorage.getItem("userId"))
+                },
+                success: function(result) {
+                    var corpus_status = result.data.corpusStatus;
+                    var batch = result.data.batch;
+                    for (var i = 0; i < batch.length; i++) {
+                        $("#batch_select").append("<option value='" + batch[i].id + "'>" + batch[i].name + "</option>");
+                    }
+                    for (var i = 0; i < corpus_status.length; i++) {
+                        $("#status_select").append("<option value='" + corpus_status[i].id + "'>" + corpus_status[i].info + "</option>");
+                    }
+                    form.render();
+                },
+                error: function(e) {
+                    alert("获取语料状态数据失败！");
+                }
+            })
+
+            var keyWord = $('#search_keyword').val().trim();
+            var batch = $('#batch_select').find("option:selected").val();
+            var status = $('#status_select').find("option:selected").val();
+            console.log("batch :", batch);
+            table.render({
+                elem: '#demo',
+                height: 600,
+                title: '语料表',
+                url: 'search',
+                method: 'post',
+                where: {
+                    userId: localStorage.getItem('userId'),
+                    keyWord: keyWord,
+                    batch: batch,
+                    corpusStatus: status
+                },
+                request: {
+                    pageName: 'pageIndex' //页码的参数名称，默认：page
+                        ,
+                    limitName: 'pageSize' //每页数据量的参数名，默认：limit
+                },
+                parseData: function(res) { //res 即为原始返回的数据
+                    localStorage.setItem("result", res);
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.status, //解析接口状态
+                        "count": res.count, //解析数据长度
+                        "data": res.data //解析数据列表
+                    };
+                },
+                page: true,
+                toolbar: true, //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
+                cols: [
+                    [ //表头
+                        { type: 'checkbox' },
+                        { field: 'id', title: 'ID', width: 80 },
+                        { field: 'batch', title: '批次', width: 80 },
+                        { field: 'status', title: '状态', width: 90 },
+                        { field: 'corpus', title: '语料' },
+                        { fixed: 'right', width: 90, align: 'center', toolbar: '#barDemo' }
+                    ]
+                ],
+                id: "testReload"
+            });
+
+            active = {
+                reload: function() {
+                    var keyWord = $('#search_keyword').val().trim();
+                    var batch = $("#batch_select").find("option:selected").val();
+                    var status = $("#status_select").find("option:selected").val();
+                    //执行重载
+                    table.reload('testReload', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        },
+                        url: 'search',
+                        method: 'POST',
+                        where: {
+                            userId: localStorage.getItem('userId'),
+                            keyWord: keyWord,
+                            batch: batch,
+                            corpusStatus: status
+                        }
+                    });
+                }
+            };
+
+            $('#search_button').on('click', function() {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+
+            //监听行工具事件
+            table.on('tool(test)', function(obj) {
+                var corpus_id = obj.data.id;
+                var batch = $('#batch_select').find("option:selected").val();
+                setCookie('current_batch', batch, "h1");
+                console.log("batch in search :", batch);
+                window.location.href = "index?flag=true&corpusId=" + corpus_id + "";
+            });
+        });
+    });
+    </script>
+</body>

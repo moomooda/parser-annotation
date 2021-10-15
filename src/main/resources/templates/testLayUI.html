@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1" name="viewport" />
+    <title>
+        历史查询
+    </title>
+    <link href="images/logo.ico" rel="shortcut icon" />
+    <link href="style.css" media="all" rel="stylesheet" />
+    <link href="css/buttons.css" media="all" rel="stylesheet" />
+    <link href="" media="all" rel="stylesheet" title="style" />
+    <link href="css/contextmenu.css" rel="stylesheet" />
+    <link href="css/mul_sele.css" rel="stylesheet" />
+    <link href="css/pagination.css" rel="stylesheet" />
+    <link rel="stylesheet" href="peak/css/common/comp/Table.css">
+    <!---->
+    <script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="js/superfish.js"></script>
+    <script type="text/javascript" src="js/jquery.pagination.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.7.2.js"></script>
+    <script type="text/javascript" src="js/tooltip.js"></script>
+    <script type="text/javascript" src="js/tablesorter.js"></script>
+    <script type="text/javascript" src="js/tablesorter-pager.js"></script>
+    <script type="text/javascript" src="js/cookie.js"></script>
+    <script type="text/javascript" src="js/custom.js"></script>
+    <script type="text/javascript" src="js/mult_sel_index.js"></script>
+    <script type="text/javascript" src="js/iconfont.js"></script>
+    <script src="peak/js/plugin/jquery.js"></script>
+    <script src="peak/js/common/all.js"></script>
+    <style>
+        .icon {
+        width: 1em;
+        height: 1em;
+        vertical-align: -0.15em;
+        fill: currentColor;
+        overflow: hidden;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div id="sitename">
+            <a class="logo float-left" href="index.html" title="platform"> 语义依存图标注平台 </a>
+            <div class="button float-right">
+                <span id="hello"> 你好， <a href="#" title="Logged in as admin"> admin </a> </span> |
+                <a href="#" id="logout" title="Logout"> 注销 </a>
+            </div>
+        </div>
+        <ul class="sf-navbar" id="navigation">
+            <li> <a href="#"> 导出依存图 </a> </li>
+            <li>
+                <a href="#"> 搜索 </a>
+                <ul>
+                    <li> <a href="/search_save"> 已标句子 </a> </li>
+                    <li> <a href="/search_pass"> 存疑句子 </a> </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="clearfix">
+    </div>
+    <div id="page-wrapper">
+        <div id="main-wrapper">
+            <div class="table-x table-checkbox">
+                <div class="table-size">
+                    <table id="testtable-mix" class="ui-table">
+                        <thead>
+                            <tr>
+                                <th scope="col"><input type="checkbox" id="chkAll_mix"><label class="ui-checkbox" for="chkAll_mix"></label></th>
+                                <th scope="col">批次</th>
+                                <th scope="col" width="200">状态</th>
+                                <th scope="col" width="100">语料</th>
+                                <th scope="col" width="80" class="tc">&nbsp;</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <!-- 列表无数据的占位 -->
+                    <div class="table-null-x dn">
+                        <div class="table-null">
+                            <h2>语料为空</h2>
+                        </div>
+                    </div>
+                    <!-- 列表加载loading -->
+                    <div class="ui-loading"><i class="ui-loading-icon"></i></div>
+                </div>
+                <!-- 底部分页 -->
+                <div class="table-page-x">
+                    <div class="table-page-data dn">
+                        共<span class="table-num-length">0</span>名成员, 每页显示<a href="javascript:;" class="table-page-every"><span class="table-num-every">15</span><i class="ui-droplist-arrow"></i></a>
+                    </div>
+                    <div class="table-page"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    $(document).ready(function() {
+        var Table = require(common / compTable);
+        var mixTable = new Table($('#testtable-mix'), {
+            ajaxOptions: {
+                url: 'search',
+                data: function() {
+                    // 列表外的动态Ajax参数
+                    return {
+                        key: encodeURIComponent($('#mixSearchForm input').val())
+                    }
+                }
+            },
+            parse: function(json) {
+                var html = '';
+                $.each(json.data.data, function(index, obj) {
+                    html = html + '\
+                <tr>\
+                    <td><input type="checkbox" id="mixChk' + obj.id + '"><label class="ui-checkbox" for="mixChk' + obj.id + '"></label></td>\
+                    <td><div class="ell">' + obj.title + '</div></td>\
+                    <td>' + obj.time + '</td>\
+                    <td>' + obj.comment + '</td>\
+                    <td class="tc"><a href="javascript:;" class="icon icon_del ui-tips" title="查看详情"></a></td>\
+                </tr>\
+            ';
+                });
+                return html;
+            },
+            events: {
+                'a.icon_del:click': function() {
+                    new Dialog().confirm('确认删除该评论？');
+                }
+            },
+            onCheck: function(allChecked, allUnchecked, container) {
+                var opt = $('#testOpt_mix');
+                if (allUnchecked == true) {
+                    opt.addClass('disabled');
+                } else {
+                    opt.removeClass('disabled');
+                }
+            }
+        });
+
+        // 删除全部评论
+        $('#delAllComment').click(function() {
+            var self = this;
+
+            if ($(this).parent().hasClass('disabled')) return false;
+
+            var dialog = new Dialog().confirm('确认删除选中的这些评论？', {
+                buttons: [{
+                    value: '删除',
+                    events: {
+                        click: function() {
+                            mixTable.ajax({
+                                data: {
+                                    action: 'empty',
+                                    current: 1
+                                },
+                                success: function() {
+                                    $(self).parent().addClass('disabled')
+                                }
+                            });
+                            dialog.remove();
+                        }
+                    }
+                }, {}]
+            });
+        });
+
+        // 搜索示意
+        new Validate($('#mixSearchForm'), function() {
+            mixTable.ajax({
+                data: {
+                    action: 'search',
+                    current: 1
+                }
+            });
+        });
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>语义依存标注平台</title>
+    <link rel="shortcut icon" href="images/logo.ico" />
+    <link href="style.css" rel="stylesheet" media="all" />
+    <link href="css/buttons.css" rel="stylesheet" media="all" />
+    <link href="" rel="stylesheet" title="style" media="all" />
+    <link rel="stylesheet" href="css/contextmenu.css" />
+    <link rel="stylesheet" href="css/pass_form.css" />
+    <link rel="stylesheet" href="css/svg_form.css" />
+    <link href="https://cdn.bootcss.com/font-awesome/5.13.0/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css" media="all">
+    <script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+    <script type="text/javascript" src="js/superfish.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.7.2.js"></script>
+    <script type="text/javascript" src="js/tooltip.js"></script>
+    <script type="text/javascript" src="js/tablesorter.js"></script>
+    <script type="text/javascript" src="js/tablesorter-pager.js"></script>
+    <script type="text/javascript" src="js/cookie.js"></script>
+    <script type="text/javascript" src="js/custom.js"></script>
+    <script type="text/javascript" src="js/contextmenu.js"></script>
+    <script type="text/javascript" src="js/cmen.js"></script>
+    <script type="text/javascript" src="js/segMenu.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/jquery.fileDownload/1.4.2/jquery.fileDownload.js"></script>
+    <script src="js/ArcsDesign.js" type="text/javascript"></script>
+    <script src="js/drawCurve.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/label.js"></script>
+    <script type="text/javascript" src="layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/cookies.js"></script>
+    <style type="text/css">
+    .word {
+        border-top: 1px solid #000000;
+        border-bottom: 1px solid #000000;
+        border-right: 1px solid #000000;
+        font-size: 17px;
+        text-align: center;
+        display: inline-block;
+        padding: 4px 0px 4px 0px;
+
+    }
+
+    .word:nth-child(1) {
+        border-left: 1px solid #000000;
+    }
+
+    .tag {
+        border-bottom: 1px solid #000000;
+        border-right: 1px solid #000000;
+        text-align: center;
+        display: inline-block;
+        padding: 4px 0px 4px 0px;
+        font-size: 17px;
+    }
+
+    .tag:nth-child(1) {
+        border-left: 1px solid #000000;
+    }
+
+    .word_changing {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        /* Firefox */
+        -webkit-box-sizing: border-box;
+        /* Safari */
+        border: solid #000000;
+        border-width: 1px 1px 0 1px;
+        /*border-color:#000000;*/
+        /*border-style:solid;*/
+        height: 26px;
+        padding: 0;
+        font-size: 17px;
+        text-align: center
+    }
+
+    .tag_changing {
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        /* Firefox */
+        -webkit-box-sizing: border-box;
+        /* Safari */
+        border: solid #000000;
+        border-width: 0 1px 1px 1px;
+        height: 26px;
+        font-size: 15px;
+        text-align: center;
+        padding: 4px 0px 4px 0px;
+        display: inline-block;
+    }
+
+    #root {
+        visibility: hidden;
+        white-space: nowrap;
+        font-size: 20px;
+    }
+
+    #table-content span {
+        padding: 5px, 0px, 5px, 0px;
+    }
+
+    #page-wrapper {
+        width: 100%;
+    }
+
+    #footer {
+        width: 2000px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <div id="sitename">
+            <a href="index.html" class="logo float-left" title="platform">语义依存标注平台</a>
+            <div class="button float-right" style="padding-right: 670px">
+                <span id="hello">你好，<a id="theme" href="#" title="Logged in as admin"></a></span>
+                &nbsp|&nbsp&nbsp <a id="logout" href="#" title="Logout">注销</a>
+            </div>
+        </div>
+        <ul id="navigation" class="sf-navbar" style="padding-right: 700px">
+            <li>
+                <a href="search">搜索</a>
+            </li>
+        </ul>
+    </div>
+    <div id="page-wrapper">
+        <div id="main-wrapper">
+            <div id="main-content" style="width: 5000px;">
+                <div class="page-title ui-widget-content ui-corner-all">
+                    <form class="layui-form">
+                        <div class="layui-form-inline">
+                            <label class="layui-form-label">选择批次</label>
+                            <div class="layui-input-block" style="width:100px">
+                                <select id="batch_select" name="batch_select" lay-filter="batch">
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="layui-input-block">
+                        <button id="confirm_button" class="layui-btn layui-btn-normal" data-type="reload">确认</button>
+                    </div>
+                    <h1>已保存<span id="saveCount"></span>句，待标注<span id="waitCount"></span>句</h1>
+                    <div class="container" id="cmenu">
+                        <!-- 画布区域-->
+                        <div id='canvasdiv'></div>
+                        <div id='table-content'>
+                            <div id="content" style="table-layout:fixed"></div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <div class="container" style="margin-top: 30px;">
+                        <div class="clearfix"></div>
+                        <button class="button button_shadow actions" data-button="red" name="save" value="save" id="save">保存</button>
+                        <button class="button button_shadow actions" data-button="green" name="reset" value="reset" id="reset">重做</button>
+                        <button class="button button_shadow actions" data-button="blue" name="change" value="change" id="change">修改分词</button>
+                        <!--<button class="button button_shadow actions" data-button="blue" name="segok" value="segok"  id="segok">修改分词完成</button>-->
+                        <button id="previous" class="button button_shadow actions" data-button="purple" name="previous" value="previous">上一句</button>
+                        <button class="button button_shadow actions" id="pass">跳过</button>
+                        <button data-method="offset" class="button button_shadow actions" id="svg_create">保存为矢量图</button>
+                        <div id="pass_form">
+                            <form action="" id="passform">
+                                <div class="model-head">
+                                    <span class="close">
+                                        <div class='x'></div>
+                                    </span>
+                                    <h2 class="pass_title">跳过理由</h2>
+                                </div>
+                                <div class="model-content">
+                                    <div class="label_box">
+                                        <label><input name="reason" type="radio" value="2">
+                                            <div>过长</div>
+                                        </label>
+                                        <label><input name="reason" type="radio" value="3">
+                                            <div>无意义</div>
+                                        </label>
+                                        <label><input name="reason" type="radio" value="4">
+                                            <div>暂跳后补</div>
+                                        </label>
+                                        <label><input name="reason" type="radio" value="5">
+                                            <div>其他</div>
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="foot-btn">
+                                <button id="pass_yes" form="passform" type="submit" class="button button_normal button_group" data-button="green">确定</button>
+                                <button id="pass_no" class="button button_normal button_group" data-button="blue">取消</button>
+                            </div>
+                        </div>
+                        <div id="svg_form" display="none">
+                            <div>
+                                <svg id="svgContainer" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                                </svg>
+                            </div>
+                            <div class="foot-btn">
+                                <button id="svg_save" class="button button_normal button_group" data-button="blue" value="download">保存</button>
+                                <button id="svg_no" class="button button_normal button_group" data-button="blue">取消</button>
+                            </div>
+                        </div>
+                        <div id="mask"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <span id="root">test</span>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="footer">
+        <div id="menu">
+            <a href="http://www.blcu.edu.cn/" title="beiyu">北京语言大学</a>
+            <a href="http://cnlr.blcu.edu.cn/" title="jiance" style="padding-right: 500px">国家语言资源监测与研究平面媒体中心</a>
+        </div>
+        <span style="padding-right: 500px;">版权所有© 2019 北京语言大学</span>
+    </div>
+</body>
+<script type="text/javascript" src="js/passform.js"></script>
+<script type="text/javascript" src="js/svg_save.js"></script>
+<script type="text/javascript">
+var hb;
+var tt;
+var wordStr;
+var tagStr;
+var words = new Array(); // 词数组
+var tags = new Array(); // 标签数组
+var wordsSize = new Array(); // 词大小数组
+var widthArr = new Array(); // td宽度数组
+var size; // 词的个数
+var relationSize; // 关系个数
+var tdBeginX = new Array(); // 每个词的左起点X
+var arcsArr = new Array(); // 关系二维数组
+var arcs = new Array();
+
+var chooseIndex; // 选中弧的index
+var tagMenu; // 右键修改标签菜单
+var segcheck = false; // 分词状态
+var td;
+
+var segMenu; // 右键修改分词菜单
+var pos_g_choose; // 修改分词选中列
+
+var fx = -1; // 第一次画弧单击的tdBeginX
+var sx = -1; // 第二次画弧单击的tdBeginX
+var fcol = -1; //第一次画弧单击的列数
+var scol = -1;
+
+var pixel = new Array(); //之后变成全局变量
+
+var corpusId;
+
+/* 右键修改标签 */
+function changeTag(tag) {
+    if (!-[1, ]) {
+        //alert('是IE！')
+        tag = tag.split(' ')[0];
+    } else {
+        tag = tag.split("&")[0];
+    }
+    arcs[chooseIndex].text = tag;
+    drawcurve();
+}
+
+/**标注情况统计**/
+function getStatistic(userId) {
+    $.ajax({
+        type: "GET",
+        url: "getStatistic",
+        data: {
+            batchId: Number(getCookie("current_batch")),
+            userId: localStorage.getItem("userId")
+        },
+        success: function(result) {
+            var result = eval("(" + result + ")");
+            if (result.status === "success") {
+                $("#saveCount").html(result.data.save);
+                $("#waitCount").html(result.data.wait);
+            }
+        },
+        error: function(e) {
+            console.log("ERROR: ", e);
+        }
+    });
+}
+
+/* 生成表格 */
+function createTable() {
+    wordStr = '<div id="word_row">';
+    tagStr = '<div id="tag_row">';
+    var x = 0;
+    for (var i = 0; i < size; i++) {
+        word = words[i];
+        tag = tags[i];
+        wordSize = wordsSize[i];
+        width = 20 * wordSize + 8;
+        tdBeginX[i] = x;
+        //console.log("tdBeginX[i]: "+tdBeginX[i]);
+
+        if (i === 0) {
+            String.prototype.visualLength = function() {
+                var root = $("#root");
+                root.text("Root");
+                return root[0].offsetWidth;
+            };
+            var text = "Root";
+            width = text.visualLength();
+            width += 8;
+            // console.log("len of ROOT: " + width);
+            wordStr += '<span class="word" style="width: ' + width + 'px">' + word + '</span>';
+            tagStr += '<span class="tag" style="width: ' + width + 'px" >' + tag + '</span>';
+        } else {
+            wordStr += '<span class="word" style="width: ' + width + 'px">' + word + '</span>';
+            tagStr += '<span class="tag"  style="width: ' + width + 'px">' + tag + '</span>';
+        }
+        widthArr[i] = width + 1;
+        // console.log("widthArr[i]: "+i+"  "+widthArr[i]);
+        x += widthArr[i];
+    }
+    wordStr += '</div>';
+    tagStr += '</div>';
+    return wordStr + tagStr;
+}
+
+/* 生成依存图 */
+function table_arcs(result) {
+    corpusId = result.data.corpusId;
+    words = result.data.words;
+    tags = result.data.tags;
+    wordsSize = result.data.wordsSize;
+    size = result.data.words.length;
+    // 生成表格
+    var x = createTable();
+    $("#content").append(x);
+    relationSize = result.data.start.length;
+    // console.log("relationSize : " + relationSize);
+    for (var i = 0; i < relationSize; i++) {
+        var temp;
+        var start = result.data.start[i];
+        var end = result.data.end[i];
+        var relation = result.data.relation[i];
+        temp = new Arcs(start, end, tdBeginX[start], ycoordinate, tdBeginX[end], relation);
+        arcs.push(temp);
+    }
+    // console.log("the size of arcs :" + arcs.length);
+    drawcurve();
+}
+
+/* 切分原始语料 */
+function getWordsAndTags(corpusId, isDone) {
+    var corpus_id = arguments[0] ? arguments[0] : "";
+    $.ajax({
+        type: "GET",
+        url: "getCorpus",
+        data: {
+            batchId: Number(getCookie("current_batch")),
+            corpusId: corpus_id,
+            userId: localStorage.getItem("userId"),
+            isDone: isDone
+        },
+        success: function(result) {
+            localStorage.setItem("result", result);
+            result = eval("(" + result + ")");
+            if (result.status === "success") {
+                table_arcs(result);
+            } else {
+                window.alert("标注完成！");
+            }
+            getStatistic(localStorage.getItem("userId"));
+        },
+        error: function(e) {
+            console.log("ERROR: ", e);
+        }
+    });
+}
+
+/* 判断是否标注完成 */
+function isDone() {
+    var is_done;
+    console.log("current_batch", getCookie("current_batch"));
+    $.ajax({
+        type: "GET",
+        async: false,
+        url: "isDone",
+        data: {
+            batchId: Number(getCookie("current_batch")),
+            userId: Number(localStorage.getItem("userId"))
+        },
+        success: function(result) {
+            result = eval("(" + result + ")");
+            if (result.status === "success") {
+                is_done = "0";
+            } else {
+                is_done = "1";
+            }
+        },
+        error: function(e) {
+            console.log("ERROR: ", e);
+            is_done = "1";
+        }
+    });
+    return is_done;
+}
+/* 分词状态下点击变更标签  */
+function segChangeTag(tag) {
+    if (!-[1, ]) {
+        //alert('是IE！')
+        tag = tag.split(' ')[0];
+    } else {
+        tag = tag.split("\t")[0];
+    }
+    var tags_row = $(">div:nth-child(2)", tt);
+    $(">span", tags_row).eq(pos_g_choose).text(tag);
+
+}
+
+/* 修改每个td的起始位置 */
+function changetdBeginX(tag, cell_len) {
+    if (tag == 'add') {
+        if (pos_g_choose == cell_len - 1) {
+            tdBeginX.push(tdBeginX[tdBeginX.length - 1] + widthArr[tdBeginX.length - 1])
+        } else {
+            tdBeginX.splice(pos_g_choose + 1, 0, tdBeginX[pos_g_choose + 1]);
+            for (var i = pos_g_choose + 2; i < tdBeginX.length; i++) {
+                tdBeginX[i] = tdBeginX[i] + CellCont;
+            }
+        }
+    } else {
+        if (pos_g_choose == cell_len - 1) {
+            tdBeginX.pop();
+        } else {
+            for (var i = pos_g_choose + 1; i < tdBeginX.length - 1; i++) {
+                tdBeginX[i] = tdBeginX[i - 1] + widthArr[i - 1];
+            }
+            tdBeginX.pop();
+        }
+    }
+}
+
+/* 修改分词增加或减少一列 */
+function changeColumn(tag) {
+    if (!-[1, ]) {
+        tag = tag.split(' ')[0];
+    } else {
+        tag = tag.split("\t")[0];
+    }
+
+    // console.log("pos_g_choose : " + pos_g_choose);
+
+    wordlist = '<div id="word_row">';
+    taglist = '<div id="tag_row">';
+
+    var words_row = $(">div:nth-child(2)", tt);
+    var cell_len = words_row.children('span').length;
+
+
+    if (tag == 'add') {
+        widthArr.splice(pos_g_choose + 1, 0, CellCont);
+        words.splice(pos_g_choose + 1, 0, w);
+        tags.splice(pos_g_choose + 1, 0, " ");
+    } else {
+        widthArr.splice(pos_g_choose, 1);
+        words.splice(pos_g_choose, 1);
+        tags.splice(pos_g_choose, 1);
+
+    }
+
+    changetdBeginX(tag, cell_len);
+
+    for (var i = 0; i < cell_len; i++) {
+        var w = document.getElementById('cell' + i).value;
+        // var postag= tt.rows.item(1).cells.item(i).innerText;
+        var tags_row = $(">div:nth-child(2)", tt);
+        var postag = $(">span", tags_row).eq(i).text();
+
+        if (pos_g_choose == i - 1 && tag == 'add') {
+            wordlist += '<span><textarea class="word_changing" style="width:' + CellCont + 'px" id="cell' + i + '" value="' + w + '"></textarea></span>';
+            taglist += '<span class="tag_changing" style="width:' + CellCont + 'px"></span>';
+        }
+        if (pos_g_choose == i && tag == 'reduce') {
+
+            continue;
+        } else {
+            if (i > pos_g_choose && tag == 'add') {
+                wordlist += '<span><textarea class="word_changing" id="cell' + (i + 1) + '" value="' + w + '"  style="width:' + widthArr[i + 1] + 'px">' + w + '</textarea></span>';
+                taglist += '<span class="tag_changing" style="width:' + widthArr[i + 1] + 'px">' + postag + '</span>';
+            } else if (i <= pos_g_choose && tag == 'add') {
+                wordlist += '<span><textarea class="word_changing"  id="cell' + i + '" value="' + w + '" style="width:' + widthArr[i] + 'px">' + w + '</textarea></span>';
+                taglist += '<span class="tag_changing" style="width:' + widthArr[i] + 'px" >' + postag + '</span>';
+            }
+
+            if (i > pos_g_choose && tag == 'reduce') {
+                wordlist += '<span><textarea class="word_changing" id="cell' + (i - 1) + '" value="' + w + '" style="width:' + widthArr[i - 1] + 'px">' + w + '</textarea></span>';
+                taglist += '<span class="tag_changing" style="width:' + widthArr[i - 1] + 'px" >' + postag + '</span>';
+            } else if (i < pos_g_choose && tag == 'reduce') {
+                wordlist += '<span><textarea class="word_changing" id="cell' + i + '" value="' + w + '" style="width:' + widthArr[i] + 'px">' + w + '</textarea></span>';
+                taglist += '<span class="tag_changing" style="width:' + widthArr[i] + 'px">' + postag + '</span>';
+            }
+        }
+
+        if (pos_g_choose == cell_len - 1 && tag == 'add' && i == cell_len - 1) {
+            wordlist += '<span ><textarea class="word_changing" id="cell' + cell_len + '" value="' + w + '" style="width:' + CellCont + 'px"  ></textarea></span>';
+            taglist += '<span class="tag_changing" style="width:' + CellCont + 'px"></span>';
+        }
+    }
+    wordlist += '</div>';
+    taglist += '</div>';
+    tt.innerHTML = wordlist + taglist;
+
+    /* 修改弧线的位置 */
+    if (tag == 'add') {
+        for (var j = 0; j < arcs.length; j++) {
+            var flag = false;
+            if (arcs[j].start > pos_g_choose) {
+                arcs[j].start = Number(arcs[j].start) + 1;
+                flag = true;
+            }
+            if (arcs[j].end > pos_g_choose) {
+                arcs[j].end = Number(arcs[j].end) + 1;
+                flag = true;
+            }
+            if (flag) {
+                updateArc(j, arcs[j].start, arcs[j].end);
+            }
+        }
+    } else if (tag == 'reduce') {
+        for (var j = 0; j < arcs.length; j++) {
+            var flag = false;
+            //移动弧，只要弧的一端比被删除的单元格所在的列大，就要移动。
+            if (arcs[j].start == pos_g_choose || arcs[j].end == pos_g_choose) {
+                arcs.splice(j, 1);
+                j--;
+                continue;
+            }
+            if (arcs[j].start > pos_g_choose) {
+                arcs[j].start = arcs[j].start - 1;
+                flag = true;
+            }
+            if (arcs[j].end > pos_g_choose) {
+                arcs[j].end = arcs[j].end - 1;
+                flag = true;
+            }
+            if (flag) {
+                updateArc(j, arcs[j].start, arcs[j].end);
+            }
+        }
+    }
+
+    drawcurve();
+}
+
+/* 更新弧内容 */
+function updateArc(index, start, end) {
+
+    arcs[index].delt = Math.abs(end - start);
+
+    arcs[index].x1 = arcs[index].x = tdBeginX[start];
+    arcs[index].y = arcs[index].yy = arcs[index].y1 - (20 - 0.1 * arcs[index].delt) * arcs[index].delt;
+
+    arcs[index].xx = arcs[index].x2 = tdBeginX[end];
+
+    arcs[index].ytxt = arcs[index].y + 5 + 0.25 * (arcs[index].y1 - arcs[index].y);
+    arcs[index].xtxt = (arcs[index].x1 + arcs[index].x2) / 2;
+
+    arcs[index].width = widthArr[start];
+}
+
+/* 判断输入字符串的长度（中文算两个，字母数字算一个）*/
+function getByteLen(val) {
+    var len = 0;
+    for (var i = 0; i < val.length; i++) {
+        var a = val.charAt(i);
+        if (a.match(/[^\x00-\xff]/ig) != null) {
+            len += 1;
+        } else {
+            len += 0.5;
+        }
+    }
+    return len;
+}
+
+/* 检查分词和词性的完整性 */
+function checkComplete() {
+    var words_row = $(">div:nth-child(1)", tt);
+    var tags_row = $(">div:nth-child(2)", tt);
+    var cell_len = words_row.children('span').length;
+
+    /* 先检查分词和标签的完整性*/
+    for (var i = 1; i < cell_len; i++) {
+        var postag = $(">span", words_row).eq(i).text();
+        // var postag= tt.rows.item(1).cells.item(i).innerText;
+        var postag = $(">span", tags_row).eq(i).text();
+        if (w == '' || postag == '') {
+            window.alert('存在为空的词语或词性，请检查！');
+            return;
+        }
+    }
+}
+
+/* 检查语义标签是否正确 */
+function checkArcText() {
+    var words_row = $(">div:nth-child(1)", tt);
+
+    for (var i = 0; i < arcs.length; i++) {
+        if (!deplabels.includes(arcs[i].text)) {
+            window.alert("语义标签出错:" + "【" + $(">span", words_row).eq(arcs[i].start).text() + "→" + $(">span", words_row).eq(arcs[i].end).text() + "】");
+            return false
+        }
+    }
+    return true;
+}
+
+/* 检查是否存在闭环(向右) */
+function checkCircleRight(start, end) {
+
+    //console.log("start-end :" + start + "-" + end);
+
+    var words_row = $(">div:nth-child(1)", tt);
+    var cell_len = words_row.children('span').length;
+
+    if (pixel[end][start] == 1) {
+        window.alert("依存弧存在闭环！" + "【" + $(">span", words_row).eq(start).text() + "→" + $(">span", words_row).eq(end).text() + "】");
+        return true;
+    }
+
+    for (var i = end + 1; i < cell_len; i++) {
+        if (pixel[end][i] == 1) {
+            //console.log("+1" + end + ":" + i);
+            if (checkCircleRight(start, i))
+                return true;
+        }
+    }
+    return false;
+}
+
+/* 检查是否存在闭环(向左) */
+function checkCircleLeft(start, end) {
+
+    //console.log("start-end :" + start + "-" + end);
+
+    var words_row = $(">div:nth-child(1)", tt);
+    var cell_len = words_row.children('span').length;
+
+    if (pixel[end][start] == 1) {
+        window.alert("依存弧存在闭环！" + "【" + $(">span", words_row).eq(start).text() + "→" + $(">span", words_row).eq(end).text() + "】");
+        return true;
+    }
+
+    for (var i = end - 1; i > 0; i--) {
+        if (pixel[end][i] == 1) {
+            //console.log("+1" + end + ":" + i);
+            if (checkCircleLeft(start, i))
+                return true;
+        }
+    }
+    return false;
+}
+
+/* 检查是否除Root之外的每个节点都有入弧 */
+function checkInArc() {
+    var innum = 0;
+    var words_row = $(">div:nth-child(1)", tt);
+    var cell_len = words_row.children('span').length;
+    var inarc = new Array();
+    for (var i = 0; i < cell_len; i++) {
+        inarc[i] = 0;
+    }
+    for (var i = 0; i < cell_len; i++) {
+        for (var j = 0; j < cell_len; j++) {
+            if (pixel[i][j] == 1) {
+                inarc[j] += 1;
+            }
+        }
+    }
+    for (var i = 0; i < cell_len; i++) {
+        if (inarc[i] > 0) {
+            innum += 1;
+        }
+    }
+    for (var i = 1; i < cell_len; i++) {
+        if (inarc[i] == 0) {
+            window.alert("除Root之外的每个节点需要有入弧！" + "【" + $(">span", words_row).eq(i).text() + "】");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/* 检查是否存在闭环 */
+function checkCircle() {
+    var words_row = $(">div:nth-child(1)", tt);
+    var cell_len = words_row.children('span').length;
+    for (var i = 0; i < cell_len; i++) {
+        for (var j = i; j < cell_len; j++) {
+            if (i == j || pixel[i][j] == 0) {
+                continue;
+            }
+            if (checkCircleRight(i, j)) {
+                return true;
+            }
+        }
+    }
+
+    for (var i = cell_len - 1; i > 0; i--) {
+        for (var j = i; j > 0; j--) {
+            if (i == j || pixel[i][j] == 0) {
+                continue;
+            }
+            if (checkCircleLeft(i, j)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+/* 保存前检查 */
+function check() {
+    if (!checkInArc()) {
+        console.log("检查入弧");
+        console.log(checkInArc())
+        return false;
+    }
+    if (!checkArcText()) {
+        console.log("检查标签");
+        console.log(checkArcText())
+        return false;
+    }
+    if (checkCircle()) {
+        console.log("检查闭合");
+        console.log(checkCircle())
+        return false;
+    }
+    return true;
+}
+
+function load_data() {
+    var theme = localStorage.getItem("userName");
+    if (theme == null || theme == "") {
+        $("#theme").html('请登录');
+    } else {
+        $("#theme").html(theme);
+    }
+}
+
+function set_select_checked(selectId, checkValue) {
+    var select = document.getElementById(selectId);
+
+    for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value == checkValue) {
+            console.log('iiii:', i);
+            select.options[i].selected = true;
+            break;
+        }
+    }
+}
+
+$(document).ready(function() {
+    layui.use(['form'], function() {
+        var form = layui.form;
+
+        tagMenu = new ContextMenu(cmen);
+        segMenu = new ContextMenu(segmentMenu);
+
+        tt = document.getElementById("content"); //开始画弧相关
+        var canvas_str = '<canvas id="cc" class="canvas" width= ' + canvasWidth + ' height=' + canvasHeight + ' style="border:0 solid #ccc;" >  Your browser does not support the HTML5 canvas.</canvas>';
+        document.getElementById('canvasdiv').innerHTML = canvas_str;
+        var c = document.getElementById("cc");
+        hb = c.getContext("2d");
+        hb.clearRect(0, 0, canvasWidth, canvasHeight); //与cover大小一致
+
+        // 获取用户相关的所有批次信息，并取得最新的批次id
+        var latest_batch;
+        $.ajax({
+            type: 'GET',
+            url: 'getBatch',
+            async: false,
+            data: {
+                userId: Number(localStorage.getItem("userId"))
+            },
+            success: function(result) {
+                result = eval("(" + result + ")");
+                var batch = result.data.batch;
+                for (var i = 0; i < batch.length; i++) {
+                    console.log("batch : ", batch[i]);
+                    if (i == 0) {
+                        latest_batch = batch[i].id;
+                        console.log("batch[0].id : ", latest_batch);
+                    }
+                    $("#batch_select").append("<option value='" + batch[i].id + "'>" + batch[i].name + "</option>");
+                }
+
+                if (getCookie("current_batch") != null) {
+                    latest_batch = getCookie("current_batch");
+                } else {
+                    setCookie('current_batch', latest_batch, "h1");
+                }
+                console.log("1 - current_batch :", getCookie('current_batch'));
+                set_select_checked('batch_select', latest_batch);
+                form.render();
+            },
+            error: function(e) {
+                alert("获取批次信息失败！");
+            }
+        })
+
+        // 判断是否从检索页面跳转而来
+        var url = window.location.href;
+        var index = url.indexOf("flag"); //判断当前url是否有flag，如果有，说明是从搜索页面跳转而来的
+        if (index != -1) {
+            var corpusId = url.split("=")[2];
+            getWordsAndTags(corpusId, true);
+        } else {
+            var is_done = isDone();
+            if (is_done == "1") {
+                window.alert("标注完成！");
+            }
+            getWordsAndTags("", is_done);
+        }
+
+        // 获取用户信息
+        load_data();
+        // 禁止网页默认右键
+        document.oncontextmenu = function(event) {
+            event.preventDefault();
+        };
+
+        // 右键弹出修改词性菜单
+        document.getElementById('cmenu').addEventListener("contextmenu", function(e) {
+            td = event.srcElement;
+            // line = td.parentElement.rowIndex;
+            // col = td.cellIndex;
+            col = $("#tag_row span").index(td);
+            var words_row = $(">div:nth-child(1)", tt);
+            var cell_len = words_row.children('span').length;
+
+            var x = event.pageX - $("#cc").offset().left;
+            var y = event.pageY - $("#cc").offset().top;
+
+            for (var i = 0; i < arcs.length; i++) {
+                var tx = arcs[i].xtxt;
+                var ty = arcs[i].ytxt; // 曲线中点坐标
+
+                if ((x - 13) <= tx && (y - 9) <= ty && (y + 10) >= ty && (x + 13) >= tx) {
+                    var previousIndex = chooseIndex;
+                    chooseIndex = i;
+                    if (segcheck == false) {
+                        arcs[previousIndex].choose = false;
+                        arcs[i].choose = true;
+                        drawcurve();
+                        tagMenu.display(e);
+                        break;
+                    }
+                }
+            }
+
+            //右键弹出修改分词菜单
+            if (col >= 0 && col < cell_len) {
+                //console.log("col : " + col);
+                if (segcheck == true) {
+                    pos_g_choose = col;
+                    segMenu.display(e);
+                }
+            }
+        });
+
+        // 确认批次信息
+        $('#confirm_button').click(function(event) {
+            var batch = $("#batch_select").find("option:selected").val();
+            setCookie('current_batch', batch, "h1");
+            // console.log("current_batch : ", batch);
+            var is_done = isDone();
+            if (is_done == "1") {
+                window.alert("标注完成！");
+            } else {
+                // 获取下一句
+                wordsSize = []; // 词大小数组
+                widthArr = []; // td宽度数组
+                arcs = [];
+                $("#canvasdiv").empty();
+                $("#content").empty();
+                $('#canvasdiv').html(canvas_str);
+                c = document.getElementById("cc");
+                hb = c.getContext("2d");
+                hb.clearRect(0, 0, canvasWidth, canvasHeight); //与cover大小一致
+            }
+            getWordsAndTags("", is_done);
+        });
+
+        // 标注弧线
+        $("#content").click(function(event) {
+            td = event.srcElement;
+            col = $("#word_row span").index(td) != -1 ? $("#word_row span").index(td) : $("#tag_row span").index(td);
+
+            var words_row = $(">div:nth-child(1)", tt);
+            var tags_row = $(">div:nth-child(2)", tt);
+
+            if (fcol == -1) {
+                // console.log("第一次点击");
+                /* 第一次单击 */
+                $(">span", words_row).eq(col).css({ "background-color": "#75ef92" });
+                $(">span", tags_row).eq(col).css({ "background-color": "#75ef92" });
+                fcol = col;
+            } else {
+                // console.log("第二次点击");
+                /* 第二次单击 */
+                if (col == 0) {
+                    // 尾节点为ROOT，违规
+                    window.alert("Root节点只能有且仅有一条出弧！");
+                    // $(">span", words_row).eq(fcol).css({ "background-color": "#F9F9F9" });
+                    // $(">span", tags_row).eq(fcol).css({ "background-color": "#F9F9F9" });
+                    // fcol = -1;
+                    // col = -1;
+                } else if (col == fcol) {
+                    // 两次点击相同列，则取消
+                    $(">span", words_row).eq(fcol).css({ "background-color": "#F9F9F9" });
+                    $(">span", tags_row).eq(fcol).css({ "background-color": "#F9F9F9" });
+                    /* 恢复指针 */
+                    fcol = -1;
+                } else if (col != fcol) {
+                    // 尾节点不为ROOT且两次点击不同列
+                    var double = false; //判断是不是已经存在相同的弧
+                    for (var i = 0; i < arcs.length; i++) {
+                        if (arcs[i].start == col && arcs[i].end == fcol) {
+                            /* 反方相弧删掉 */
+                            arcs.splice(i, 1);
+                            break;
+                        }
+                        if (arcs[i].start == fcol && arcs[i].end == col) {
+                            double = true;
+                        }
+                    }
+                    if (!double) {
+                        var tag = 'NO';
+                        var head = $(">span", words_row).eq(fcol).text();
+                        var tail = $(">span", words_row).eq(col).text();
+                        // console.log(head);
+                        // console.log(tail);
+                        var punctuation = /，|,|。|\.|？|\?|！|!|@|#|￥|%|&|\*|（|）|……|‘|’|'|”|“|"|\||；|：|《|》|、|·|~|-|\+|=|——|}|{|】|【/;
+                        /* 智能标注 */
+                        if (fcol == 0) {
+                            tag = 'Root';
+                        }
+                        if (tail.search(punctuation) != -1) {
+                            // console.log("不等于-1");
+                            tag = 'mPunc';
+                        } else if (tail == '的' || tail == '地' || tail == '得') {
+                            tag = 'mAux';
+                        }
+                        /* 添加新弧 */
+                        var temp = new Arcs(fcol, col, tdBeginX[fcol], ycoordinate, tdBeginX[col], tag);
+                        arcs.push(temp);
+                    }
+                    /* 重新画弧 */
+                    drawcurve();
+
+                    $(">span", words_row).eq(fcol).css({ "background-color": "#F9F9F9" });
+                    $(">span", tags_row).eq(fcol).css({ "background-color": "#F9F9F9" });
+                    /* 恢复指针 */
+                    fcol = -1;
+                }
+            }
+        });
+
+        // 修改分词 
+        $('#change').click(function() {
+            if ($(this).val() === "change") {
+                $(this).val("segok");
+                $(this).text("修改完毕");
+                if (segcheck == true) {
+                    return;
+                }
+                segcheck = true;
+                wordlist = '<div id="word_row">';
+                taglist = '<div id="tag_row">';
+                var words_row = $(">div:nth-child(1)", tt);
+                var tags_row = $(">div:nth-child(2)", tt);
+                var cell_len = words_row.children('span').length;
+
+
+                for (var i = 0; i < cell_len; i++) {
+                    var w = $(">span", words_row).eq(i).text();
+                    var tag = $(">span", tags_row).eq(i).text();
+                    wordlist += '<span><textarea style="width:' + widthArr[i] + 'px" class="word_changing" id="cell' + i + '" value="' + w + '" >' + w + '</textarea></span>';
+                    taglist += '<span class="tag_changing"  style="width:' + widthArr[i] + 'px">' + tag + '</span>';
+                }
+                wordlist += '</div>';
+                taglist += '</div>';
+                tt.innerHTML = wordlist + taglist;
+            }
+
+            // 分词修改完成 
+            else {
+                if (segcheck == false) {
+                    return;
+                }
+                wordlist = '<div id="word_row">';
+                taglist = '<div id="tag_row">';
+                var words_row = $(">div:nth-child(1)", tt);
+                var cell_len = words_row.children('span').length;
+
+                /* 先检查分词和标签的完整性*/
+                for (var i = 1; i < cell_len; i++) {
+                    var w = document.getElementById('cell' + i).value;
+                    var tags_row = $(">div:nth-child(2)", tt);
+                    var postag = $(">span", tags_row).eq(i).text();
+                    if (w == '' || postag == '') {
+                        window.alert('存在为空的词语或词性，请检查！');
+                        return;
+                    }
+                }
+
+                var x = 0;
+                for (var i = 0; i < cell_len; i++) {
+                    var w = document.getElementById('cell' + i).value;
+                    var tags_row = $(">div:nth-child(2)", tt);
+                    var postag = $(">span", tags_row).eq(i).text();
+                    var wordSize = getByteLen(w);
+                    var width = 20 * wordSize + 8;
+                    tdBeginX[i] = x;
+
+                    if (i === 0) {
+                        String.prototype.visualLength = function() {
+                            var root = $("#root");
+                            root.text("Root");
+                            return root[0].offsetWidth;
+                        };
+                        var text = "Root";
+                        width = text.visualLength();
+                        width += 8;
+                        wordlist += '<span class="word" style="width:' + width + 'px">' + w + '</span>';
+                        taglist += '<span class="tag" style="width:' + width + 'px">' + postag + '</span>';
+
+                        words[0] = w;
+                        tags[0] = postag;
+                    } else {
+                        wordlist += '<span class="word" style="width:' + width + 'px">' + w + '</span>';
+                        taglist += '<span class="tag" style="width:' + width + 'px">' + postag + '</span>';
+
+                        words[i] = w;
+                        tags[i] = postag;
+                    }
+                    widthArr[i] = width + 1;
+                    x += widthArr[i];
+                }
+                wordlist += '</div>';
+                taglist += '</div>';
+                tt.innerHTML = wordlist + taglist;
+
+                /* widthArr 和 tdBeginX 都发生变化，要更新弧 */
+                for (var i = 0; i < arcs.length; i++) {
+                    updateArc(i, arcs[i].start, arcs[i].end);
+                }
+                drawcurve();
+                segcheck = false;
+                $(this).val("change");
+                $(this).text("修改分词");
+            }
+        });
+
+        function sleep(numberMillis) {
+            var now = new Date();
+            var exitTime = now.getTime() + numberMillis;
+            while (true) {
+                now = new Date();
+                if (now.getTime() > exitTime)
+                    return;
+            }
+        }
+        // 重置
+        $("#reset").click(function() {
+            var chan_btn = $("#change");
+            if (chan_btn.val() === "segok") {
+                chan_btn.val("change");
+                chan_btn.text("修改分词");
+                segcheck = false;
+            }
+            wordsSize = []; // 词大小数组
+            widthArr = []; // td宽度数组
+            arcs = [];
+            $("#canvasdiv").empty();
+            $("#content").empty();
+            $('#canvasdiv').html(canvas_str);
+            c = document.getElementById("cc");
+            hb = c.getContext("2d");
+            hb.clearRect(0, 0, canvasWidth, canvasHeight); //与cover大小一致
+            result = localStorage.getItem("result");
+            result = eval("(" + result + ")");
+            table_arcs(result);
+        });
+
+        // 上一句 
+        $("#previous").click(function() {
+            var storageResult = localStorage.getItem("result");
+            storageResult = eval("(" + storageResult + ")");
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "getLastCorpus",
+                data: {
+                    batchId: Number(getCookie("current_batch")),
+                    userId: localStorage.getItem("userId"),
+                    currentCorpusId: (typeof(storageResult.data.corpusId) == "undefined") ? "" : storageResult.data.corpusId
+                },
+                success: function(result) {
+                    var result = eval("(" + result + ")");
+                    if (result.status === "success") {
+                        wordsSize = []; // 词大小数组
+                        widthArr = []; // td宽度数组
+                        arcs = [];
+                        $("#canvasdiv").empty();
+                        $("#content").empty();
+                        $('#canvasdiv').html(canvas_str);
+                        c = document.getElementById("cc");
+                        hb = c.getContext("2d");
+                        hb.clearRect(0, 0, canvasWidth, canvasHeight); //与cover大小一致
+                        getWordsAndTags(result.data.corpusId, true);
+                    } else {
+                        window.alert("已经是第一句！");
+                    }
+
+                },
+                error: function(e) {
+                    console.log("ERROR: ", e);
+                }
+            });
+        });
+
+        // 保存 
+        $('#save').click(function() {
+            // console.log("in save!")
+            /* 先切换分词状态 */
+            if (segcheck == true) {
+                window.alert('请先切换出分词修改状态，否则无法保存！');
+                return;
+            }
+            var words_row = $(">div:nth-child(1)", tt);
+            var cell_len = words_row.children('span').length;
+
+            /* 初始化弧关系二维数组 */
+            for (var i = 0; i < cell_len; i++) {
+                pixel[i] = new Array();
+                for (var j = 0; j < cell_len; j++) {
+                    pixel[i][j] = 0;
+                }
+            }
+
+            for (var i = 0; i < arcs.length; i++) {
+                pixel[arcs[i].start][arcs[i].end] = 1;
+            }
+
+            /* 弧标签是否合法 */
+            /* 除Root之外的每个节点需要有入弧 */
+            /* 依存弧存在闭环*/
+            /* Root节点只能有且仅有一条出！弧！*/
+            /* 存在为空的词语或词性，请检查 */
+            if (!check()) {
+                console.log("不合格");
+                return;
+            }
+
+            var starts = new Array();
+            var ends = new Array();
+            var relations = new Array();
+            for (var i = 0; i < arcs.length; i++) {
+                starts.push(arcs[i].start);
+                ends.push(arcs[i].end);
+                relations.push(arcs[i].text);
+            }
+
+            var result = localStorage.getItem("result");
+            var result = eval("(" + result + ")");
+            var currentCorpusId = result.data.corpusId;
+            $.ajax({
+                async: false,
+                type: "POST",
+                url: "save",
+                data: {
+                    corpusId: currentCorpusId,
+                    words: words,
+                    tags: tags,
+                    starts: starts,
+                    ends: ends,
+                    relations: relations
+                },
+                success: function(result) {
+                    // 判断是否标注完成
+                    var is_done = isDone(currentCorpusId);
+                    if (is_done == "1") {
+                        window.alert("标注完成!");
+                        return;
+                    } else {
+                        // 获取下一句
+                        wordsSize = []; // 词大小数组
+                        widthArr = []; // td宽度数组
+                        arcs = [];
+                        $("#canvasdiv").empty();
+                        $("#content").empty();
+                        $('#canvasdiv').html(canvas_str);
+                        c = document.getElementById("cc");
+                        hb = c.getContext("2d");
+                        hb.clearRect(0, 0, canvasWidth, canvasHeight); //与cover大小一致
+                        getWordsAndTags("", false)
+                    }
+
+                },
+                error: function(e) {
+                    console.log("ERROR: ", e);
+                }
+            });
+        });
+
+        // 双击删除弧线 
+        $("#cmenu").dblclick(function(e) { //获取双击事件。
+            //console.log("bdbdbdbdb");
+            var x = e.pageX - $("#cc").offset().left;
+            var y = e.pageY - $("#cc").offset().top;
+
+            for (var i = 0; i < arcs.length; i++) {
+                var tx = arcs[i].xtxt;
+                var ty = arcs[i].ytxt;
+                if ((x - 13) <= tx && (y - 8) <= ty && (y + 8) >= ty && (x + 13) >= tx) {
+                    arcs.splice(i, 1);
+                    drawcurve();
+                    break;
+                }
+            }
+        });
+
+    });
+});
+</script>
+
+</html>

@@ -1,0 +1,74 @@
+#svg_form {
+    border: 1px solid rgba(0,0,0,.2);
+    height: auto;
+    border-radius: 6px;
+    box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    background: #fff;
+    z-index: 1000;
+    position: absolute;
+    left: 50%;
+    top: 35%;
+    margin-left: -299px;
+    display: none;
+}
+
+.close {
+    padding: 0;
+    background: 0 0;
+    border: 0;
+    float: right;
+    font-size: 18px !important;
+    font-weight: 700;
+    text-shadow: 0 1px 0 #fff;
+    opacity: 0.4;
+    /*margin-top: 1px;*/
+}
+#close:hover {
+    cursor: pointer;
+    color: #d51917;
+}
+
+.model-content {
+    position: relative;
+    padding: 15px;
+}
+
+.foot-btn>button{
+    margin-bottom: 10px;
+}
+.foot-btn>button:nth-child(1){
+    position: relative;
+    left: 70px;
+
+}
+.foot-btn>button:nth-child(2){
+    position:relative;
+    left: 140px;
+}
+.x {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.x::before {
+    content: '';
+    width: inherit;
+    border-top: 1px solid #000;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.x::after {
+    content: '';
+    width: inherit;
+    border-top: 1px solid #000;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
