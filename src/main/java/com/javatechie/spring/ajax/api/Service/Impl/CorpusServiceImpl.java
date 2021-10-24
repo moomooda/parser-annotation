@@ -245,14 +245,15 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 	@Override
-	public List<BatchInfo> getBatch(Integer userId) {
+	public List<BatchInfo> getBatch(Integer userId, boolean isOld) {
 		List<BatchInfo> batchInfos = new ArrayList<BatchInfo>();
 		List<BatchUser> batchUsers = batchUserDao.findAllByUserId(userId);
 		for (BatchUser batchUser : batchUsers) {
 			System.out.println(batchUser.toString());
 			System.out.println(batchInfoDao.getOne(batchUser.getBatchId()));
-			if (null != batchInfoDao.findOneByIdAndIsShow(batchUser.getBatchId(), true)) {
-				batchInfos.add(batchInfoDao.findOneByIdAndIsShow(batchUser.getBatchId(), true));
+			BatchInfo batchInfo = batchInfoDao.findOneByIdAndIsShowAndIsOld(batchUser.getBatchId(), true, isOld);
+			if (null != batchInfo){
+				batchInfos.add(batchInfo);
 			}
 		}
 		return batchInfos;
