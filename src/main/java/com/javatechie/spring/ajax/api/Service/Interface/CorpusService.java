@@ -62,4 +62,7 @@ public interface CorpusService {
 	List<Status> getStatus();
 	
 	Corpus testCorpus ();
+
+
+
 }

@@ -11,11 +11,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -105,8 +101,8 @@ public class CorpusController {
 	 * @return
 	 */
 	@GetMapping("/getCorpus")
-	public ResponseEntity<Object> getCorpus(Integer batchId, Integer corpusId, Integer userId, String isDone) {
-		logger.info("In the method getCorpus of  CorpusController");
+	public ResponseEntity<Object> getCorpus(Integer batchId, Integer corpusId, Integer userId, String isDone
+								 , @RequestParam (defaultValue = "false") boolean isOld) {
 		logger.info("corpusId : " + corpusId);
 		logger.info("userId : " + userId);
 		logger.info("isDone : " + isDone);
@@ -121,7 +117,6 @@ public class CorpusController {
 			resultMap.putAll(corpusService.cutRelationCorpus(corpusId));
 			resultMap.put("corpusId", selectedCorpusId);
 			ServiceResponse<Map<String, Object>> response = new ServiceResponse<>("success", resultMap);
-			logger.info("Out the method getCorpus of  CorpusController");
 			return new ResponseEntity<Object>(response, HttpStatus.OK);
 		}
 		if (isDone.equals("1")) {
@@ -145,10 +140,13 @@ public class CorpusController {
 		resultMap.putAll(corpusService.cutOriginalCorpus(selectedCorpusId));
 		resultMap.putAll(corpusService.cutRelationCorpus(selectedCorpusId));
 		resultMap.put("corpusId", selectedCorpusId);
+		if(batchId == 50) {
+			resultMap.put("originalText", String.join("", Collections.nCopies(10, "原文段落")));
+			resultMap.put("translationText", String.join("", Collections.nCopies(10, "译文段落")));
+		}
 		logger.info("resultMap " + resultMap);
 
 		ServiceResponse<Map<String, Object>> response = new ServiceResponse<>("success", resultMap);
-		logger.info("Out the method getCorpus of  CorpusController");
 		return new ResponseEntity<Object>(response, HttpStatus.OK);
 	}
 
