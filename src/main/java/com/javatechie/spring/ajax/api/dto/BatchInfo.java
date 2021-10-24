@@ -35,6 +35,8 @@ public class BatchInfo {
 	@Column
 	private Boolean isShow = true;
 
+	@Column Boolean isOld;
+
 	@Column
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Temporal(TemporalType.TIMESTAMP)
