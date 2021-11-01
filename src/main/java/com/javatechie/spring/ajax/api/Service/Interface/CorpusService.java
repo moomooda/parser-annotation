@@ -53,7 +53,7 @@ public interface CorpusService {
 	 * 获取用户所属的所有批次信息
 	 * @return
 	 */
-	List<BatchInfo> getBatch(Integer userId);
+	List<BatchInfo> getBatch(Integer userId, boolean isOld);
 	
 	/**
 	 * 
