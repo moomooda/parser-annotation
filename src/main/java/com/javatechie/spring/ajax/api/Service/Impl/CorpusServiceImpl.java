@@ -251,7 +251,7 @@ public class CorpusServiceImpl implements CorpusService {
 		for (BatchUser batchUser : batchUsers) {
 			System.out.println(batchUser.toString());
 			System.out.println(batchInfoDao.getOne(batchUser.getBatchId()));
-			BatchInfo batchInfo = batchInfoDao.findOneByIdAndIsShowAndIsOld(batchUser.getBatchId(), true, isOld);
+			BatchInfo batchInfo = batchInfoDao.findOneByIdAndIsShow(batchUser.getBatchId(), true);
 			if (null != batchInfo){
 				batchInfos.add(batchInfo);
 			}
