@@ -245,7 +245,7 @@ public class CorpusServiceImpl implements CorpusService {
 	}
 
 	@Override
-	public List<BatchInfo> getBatch(Integer userId, boolean isOld) {
+	public List<BatchInfo> getBatch(Integer userId) {
 		List<BatchInfo> batchInfos = new ArrayList<BatchInfo>();
 		List<BatchUser> batchUsers = batchUserDao.findAllByUserId(userId);
 		for (BatchUser batchUser : batchUsers) {
