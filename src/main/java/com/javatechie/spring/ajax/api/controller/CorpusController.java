@@ -140,8 +140,10 @@ public class CorpusController {
 		resultMap.putAll(corpusService.cutOriginalCorpus(selectedCorpusId));
 		resultMap.putAll(corpusService.cutRelationCorpus(selectedCorpusId));
 		resultMap.put("corpusId", selectedCorpusId);
-		resultMap.put("originalText", String.join("", Collections.nCopies(10, "原文段落")));
-		resultMap.put("translationText", String.join("", Collections.nCopies(10, "译文段落")));
+		if(batchId == 50) {
+			resultMap.put("originalText", String.join("", Collections.nCopies(10, "原文段落")));
+			resultMap.put("translationText", String.join("", Collections.nCopies(10, "译文段落")));
+		}
 		logger.info("resultMap " + resultMap);
 
 		ServiceResponse<Map<String, Object>> response = new ServiceResponse<>("success", resultMap);

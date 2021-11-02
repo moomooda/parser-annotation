@@ -79,8 +79,12 @@ CoNLL格式语料转sql文件：tosql.py
    结果就是将语料导入到该用户下。
 
 4. 执行生成的SQL文件即可；
-
    
+5. 插入batch和user的对应关系
+insert into batch_user(user_id, batch_id) values (6, 50);
+   
+6. 插入batch的info
+insert into batch_info(create_date, name, is_show, is_old) values (now(), '古汉语测试语料', b'1',  b'1');
 
 [![51T2QO.md.png](https://z3.ax1x.com/2021/10/15/51T2QO.md.png)](https://imgtu.com/i/51T2QO)
 
