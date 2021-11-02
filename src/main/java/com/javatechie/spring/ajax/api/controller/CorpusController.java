@@ -497,12 +497,12 @@ public class CorpusController {
 	 * @return
 	 */
 	@RequestMapping("/getBatch")
-	public Object getBatch(Integer userId, @RequestParam(defaultValue = "false") boolean isOld) {
+	public Object getBatch(Integer userId) {
 		logger.info("In the method getBatch of  CorpusController");
 		logger.info("userId : " + userId);
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		List<Status> status = corpusService.getStatus();
-		List<BatchInfo> batch = corpusService.getBatch(userId, isOld);
+		List<BatchInfo> batch = corpusService.getBatch(userId);
 
 		resultMap.put("batch", batch);
 		resultMap.put("corpusStatus", status);

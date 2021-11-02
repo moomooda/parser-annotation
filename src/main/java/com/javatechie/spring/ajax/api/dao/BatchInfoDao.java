@@ -6,6 +6,6 @@ import com.javatechie.spring.ajax.api.dto.BatchInfo;
 
 public interface BatchInfoDao extends JpaRepository<BatchInfo, Integer> {
 
-	BatchInfo findOneByIdAndIsShowAndIsOld(Integer id, Boolean isShow, Boolean isOld);
+	BatchInfo findOneByIdAndIsShow(Integer id, Boolean isShow);
 
 }
