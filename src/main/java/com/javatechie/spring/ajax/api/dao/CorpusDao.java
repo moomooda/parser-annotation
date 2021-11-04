@@ -39,7 +39,9 @@ public interface CorpusDao extends JpaRepository<Corpus, Integer> {
 	@Query("UPDATE Corpus c SET c.statusId=?2, c.updateDate=?3 WHERE c.id=?1")
 	int updateCorpusStatusById(Integer corpusId, Integer corpusStatus, Date date);
 	
-	@	Query(nativeQuery = true,
+	@Query(nativeQuery = true,
 			value = "SELECT id FROM corpus c WHERE c.user_id=?1 AND c.batch_id=?2 AND c.status_id=?3 order by c.index LIMIT 1")
     int findMinIndexCoupusIdByUserIdAndBatchIdAndStatusId(Integer userId, Integer batchId, Integer statusId);
+
+
 }

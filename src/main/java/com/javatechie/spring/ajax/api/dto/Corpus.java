@@ -66,6 +66,9 @@ public class Corpus {
 	@Column(length = 32)
 	private Integer batchId;
 
+	@Column
+	private Integer translationId;
+
 	public Integer getId() {
 		return id;
 	}
@@ -136,6 +139,10 @@ public class Corpus {
 
 	public void setBatchId(Integer batchId) {
 		this.batchId = batchId;
+	}
+
+	public int getTranslationId(){
+		return translationId;
 	}
 
 	@Override
