@@ -16,6 +16,7 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.javatechie.spring.ajax.api.dto.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,10 +36,6 @@ import com.javatechie.spring.ajax.api.CorpusStatus;
 import com.javatechie.spring.ajax.api.Service.Interface.CorpusService;
 import com.javatechie.spring.ajax.api.dao.BatchInfoDao;
 import com.javatechie.spring.ajax.api.dao.CorpusDao;
-import com.javatechie.spring.ajax.api.dto.BatchInfo;
-import com.javatechie.spring.ajax.api.dto.Corpus;
-import com.javatechie.spring.ajax.api.dto.ServiceResponse;
-import com.javatechie.spring.ajax.api.dto.Status;
 import de.vandermeer.svg2vector.applications.fh.Svg2Vector_FH;
 
 @RestController
@@ -140,9 +137,17 @@ public class CorpusController {
 		resultMap.putAll(corpusService.cutOriginalCorpus(selectedCorpusId));
 		resultMap.putAll(corpusService.cutRelationCorpus(selectedCorpusId));
 		resultMap.put("corpusId", selectedCorpusId);
-		if(batchId == 50) {
-			resultMap.put("originalText", String.join("", Collections.nCopies(10, "原文段落")));
-			resultMap.put("translationText", String.join("", Collections.nCopies(10, "译文段落")));
+		// corpus_id 查 translate_id
+		Corpus corpus = corpusService.getCorpusById(selectedCorpusId);
+		int translationId = corpus.getTranslationId();
+		if(translationId != -1) {
+			// 去查
+			CorpusTranslation corpusTranslation = corpusService.getTranslationInfo(translationId);
+			resultMap.put("originalText", corpusTranslation.getOriginalParagraph());
+			resultMap.put("translationText", corpusTranslation.getTranslationParagraph());
+		} else {
+			resultMap.put("originalText", "无");
+			resultMap.put("translationText", "无");
 		}
 		logger.info("resultMap " + resultMap);
 

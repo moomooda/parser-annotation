@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import com.javatechie.spring.ajax.api.dto.CorpusTranslation;
 import org.springframework.data.domain.Page;
 
 import com.javatechie.spring.ajax.api.dto.BatchInfo;
@@ -63,6 +64,7 @@ public interface CorpusService {
 	
 	Corpus testCorpus ();
 
-
+	// 查古汉语对应的译文
+	CorpusTranslation getTranslationInfo(int translationId);
 
 }

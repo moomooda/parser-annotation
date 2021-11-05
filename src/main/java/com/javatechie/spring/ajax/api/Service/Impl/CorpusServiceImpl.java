@@ -12,6 +12,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import com.javatechie.spring.ajax.api.dao.*;
+import com.javatechie.spring.ajax.api.dto.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,14 +26,6 @@ import org.springframework.stereotype.Service;
 import com.javatechie.spring.ajax.api.CorpusStatus;
 import com.javatechie.spring.ajax.api.LoginInterceptor;
 import com.javatechie.spring.ajax.api.Service.Interface.CorpusService;
-import com.javatechie.spring.ajax.api.dao.BatchInfoDao;
-import com.javatechie.spring.ajax.api.dao.BatchUserDao;
-import com.javatechie.spring.ajax.api.dao.CorpusDao;
-import com.javatechie.spring.ajax.api.dao.CorpusStatusDao;
-import com.javatechie.spring.ajax.api.dto.BatchInfo;
-import com.javatechie.spring.ajax.api.dto.BatchUser;
-import com.javatechie.spring.ajax.api.dto.Corpus;
-import com.javatechie.spring.ajax.api.dto.Status;
 import com.javatechie.spring.ajax.api.util.StringUtil;
 
 @Service
@@ -46,6 +40,8 @@ public class CorpusServiceImpl implements CorpusService {
 	BatchUserDao batchUserDao;
 	@Autowired
 	BatchInfoDao batchInfoDao;
+	@Autowired
+	CorpusTranslationDao corpusTranslationDao;
 
 	@Override
 	public Map<String, List<Object>> cutOriginalCorpus(Integer corpusId) {
@@ -269,5 +265,10 @@ public class CorpusServiceImpl implements CorpusService {
 	@Override
 	public Corpus testCorpus() {
 		return corpusDao.findById(corpusDao.findMinIndexCoupusIdByUserIdAndBatchIdAndStatusId(3, 19, 1)).get();
+	}
+
+	@Override
+	public CorpusTranslation getTranslationInfo(int translationId) {
+		return corpusTranslationDao.findCorpusTranslationById(translationId);
 	}
 }
