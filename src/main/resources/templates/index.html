@@ -108,16 +108,36 @@
     #footer {
         width: 2000px;
     }
-    .btn1 {
+    #btn1 {
         color:white;
-        width: 80px;
-        height:50px;
+        width: 60px;
+        height:40px;
         background-color:rgb(3, 110, 3);
         border-radius: 25px;
-        line-height: 50px;
+        line-height: 40px;
         text-align: center;
-        margin-left: 1000px;
-        margin-top: 100px;
+        margin-left: 0;
+        margin-top: 0;
+        float:left;
+    }
+    #btn2 {
+        color:white;
+        width: 60px;
+        height:40px;
+        background-color: rgb(110, 3, 12);
+        border-radius: 25px;
+        line-height: 40px;
+        text-align: center;
+        margin-left: 0;
+        margin-top: 0;
+        float:right;
+    }
+    .nav {
+        height:40px;
+        width:200px;
+        /*background-color: white;*/
+        text-align: center;
+        margin-left:700px;
     }
     </style>
 </head>
@@ -161,8 +181,13 @@
                         <button id="confirm_button" class="layui-btn layui-btn-normal" data-type="reload">确认</button>
                     </div>
                     <h1>已保存<span id="saveCount"></span>句，待标注<span id="waitCount"></span>句</h1>
-                                                                <!--显示译文代码添加处-->
-                    <div class="btn1">显示译文</div>
+                                                                                                 <!--显示译文代码添加处-->
+                    <div class="nav">
+                        <div id="btn1" onclick="myshow()">显示译文</div>
+                        <div id="btn2" onclick="myhide()">隐藏译文</div>
+                    </div>
+
+                    <span id="buttonMsg"></span>
                     <div class="container" id="cmenu">
                         <!-- 画布区域-->
                         <div id='canvasdiv'></div>
@@ -273,7 +298,50 @@ var pixel = new Array(); //之后变成全局变量
 
 var corpusId;
 
-/* 右键修改标签 */
+
+function myhide()
+{
+    // alert("hello");
+    document.getElementById("buttonMsg").innerHTML = "";//解析译文
+}
+function myshow()
+{
+    // alert("hello world");
+    // $.ajax({
+    //     url:'http://localhost:8080/annotation/getCorpus', //这个是后台提供的借口
+    //     dataType:'jsonp',
+    //     // data:{
+    //     // },
+    //     success:function(result){    //这里的json就是从后台获取的借口。
+    //         console.log(result);
+    //     }
+    // });
+    // http://localhost:8080/annotation/getCorpus?batchId=50&corpusId=&userId=6&isDone=0
+    var a=Number(getCookie("current_batch"));
+    var b=localStorage.getItem("userId");
+    // http://localhost:8080/annotation/getCorpus?batchId=a&corpusId=&userId=b&isDone=0
+    var myurl='http://localhost:8080/annotation/getCorpus?batchId='+Number(getCookie("current_batch"))+'&'+corpusId+'='+'&'+'userId'+'='+localStorage.getItem("userId")+'&isDone=0';
+    // var c=corpus_id;
+    // http://localhost:8080/annotation/getCorpus?batchId=Number(getCookie("current_batch"))&corpusId=corpus_id&userId=localStorage.getItem("userId")&isDone=0
+    $.get( myurl,
+        function(result) {
+
+            // var jsonobj=eval("("+data+")");
+            // alert("译文:" + jsonobj.translationText );
+            // alert("译文:" +data.translationText );
+            var jsonobj=eval("("+result+")");
+            //var jsondata=eval("("+jsonobj.data+")");
+            //alert("译文:" +jsondata);
+            console.log(jsonobj.data.originalText);
+            document.getElementById("buttonMsg").innerHTML = jsonobj.data.originalText;//解析译文
+            //console.log(jsondata.data.originalText);
+        });
+}
+
+
+
+
+
 function changeTag(tag) {
     if (!-[1, ]) {
         //alert('是IE！')
