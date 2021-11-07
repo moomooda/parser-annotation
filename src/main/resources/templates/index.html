@@ -493,8 +493,8 @@ function getWordsAndTags(corpusId, isDone) {
             result = eval("(" + result + ")");
             console.log("原文是："+result.data.originalText);
             console.log("译文是："+result.data.translationText);
-            localStorage.setItem("yuan", result.data.originalText);
-            localStorage.setItem("yi", result.data.translationText);
+            localStorage.setItem("yuan", splitLongText(result.data.originalText));
+            localStorage.setItem("yi", splitLongText(result.data.translationText));
             // document.getElementById("result").innerHTML = localStorage.getItem("lastname");
 
             if (result.status === "success") {
@@ -508,6 +508,16 @@ function getWordsAndTags(corpusId, isDone) {
             console.log("ERROR: ", e);
         }
     });
+}
+
+/* 切分译文、原文段落 */
+function splitLongText(paragraph) {
+    str_list = paragraph.split("。")
+    res = ""
+    for (let i in str_list) {
+        res += str_list[i] + "。<br>"
+    }
+    return res
 }
 
 /* 判断是否标注完成 */
