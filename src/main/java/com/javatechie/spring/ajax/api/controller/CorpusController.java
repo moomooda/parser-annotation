@@ -98,8 +98,7 @@ public class CorpusController {
 	 * @return
 	 */
 	@GetMapping("/getCorpus")
-	public ResponseEntity<Object> getCorpus(Integer batchId, Integer corpusId, Integer userId, String isDone
-								 , @RequestParam (defaultValue = "false") boolean isOld) {
+	public ResponseEntity<Object> getCorpus(Integer batchId, Integer corpusId, Integer userId, String isDone) {
 		logger.info("corpusId : " + corpusId);
 		logger.info("userId : " + userId);
 		logger.info("isDone : " + isDone);
