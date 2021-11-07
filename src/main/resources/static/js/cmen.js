@@ -1471,6 +1471,30 @@ var cmen = [{
                                 changeTag(this.getElementsByTagName("span")[1].innerHTML);
                             }
                         }
+                    },
+                    {
+                        "text": "mHc&nbsp&nbsp&nbsp&nbsp&nbsp合词标记",
+                        "events": {
+                            "click": function(e) {
+                                changeTag(this.getElementsByTagName("span")[1].innerHTML);
+                            }
+                        }
+                    },
+                    {
+                        "text": "mQd&nbsp&nbsp&nbsp&nbsp&nbsp取独标记",
+                        "events": {
+                            "click": function(e) {
+                                changeTag(this.getElementsByTagName("span")[1].innerHTML);
+                            }
+                        }
+                    },
+                    {
+                        "text": "mAfx&nbsp&nbsp&nbsp&nbsp&nbsp词缀标记",
+                        "events": {
+                            "click": function(e) {
+                                changeTag(this.getElementsByTagName("span")[1].innerHTML);
+                            }
+                        }
                     }
                 ]
             }
