@@ -198,15 +198,14 @@
                     </div>
                     <h1>已保存<span id="saveCount"></span>句，待标注<span id="waitCount"></span>句</h1>
                                                                                                  <!--显示译文代码添加处-->
-                    <div class="nav">
-                        <div id="btn1" onclick="secondshow()" >显示原文</div>
-                        <div id="btn2" onclick="secondhide()">隐藏原文</div>
-                        <div id="btn3" onclick="myshow()">显示译文</div>
-                        <div id="btn4" onclick="myhide()">隐藏译文</div>
-                    </div>
+<!--                    <div class="nav">-->
+<!--                        <div id="btn1" onclick="secondshow()" >显示原文</div>-->
+<!--                        <div id="btn2" onclick="secondhide()">隐藏原文</div>-->
+<!--                        <div id="btn3" onclick="myshow()">显示译文</div>-->
+<!--                        <div id="btn4" onclick="myhide()">隐藏译文</div>-->
+<!--                    </div>-->
 
-                    <div id="buttonyuan"></div>
-                    <div id="buttonMsg" style="color:blue" ></div>
+
 
                     <div class="container" id="cmenu">
                         <!-- 画布区域-->
@@ -218,6 +217,8 @@
                     <br><br>
                     <div class="container" style="margin-top: 30px;">
                         <div class="clearfix"></div>
+                        <div id="buttonyuan"></div>
+                        <div id="buttonMsg" style="color:blue" ></div>
                         <button class="button button_shadow actions" data-button="red" name="save" value="save" id="save">保存</button>
                         <button class="button button_shadow actions" data-button="green" name="reset" value="reset" id="reset">重做</button>
                         <button class="button button_shadow actions" data-button="blue" name="change" value="change" id="change">修改分词</button>
@@ -225,6 +226,10 @@
                         <button id="previous" class="button button_shadow actions" data-button="purple" name="previous" value="previous">上一句</button>
                         <button class="button button_shadow actions" id="pass">跳过</button>
                         <button data-method="offset" class="button button_shadow actions" id="svg_create">保存为矢量图</button>
+                        <button data-method="offset" class="button button_shadow actions" onclick="secondshow()">显示原文</button>
+                        <button data-method="offset" class="button button_shadow actions" onclick="secondhide()">隐藏原文</button>
+                        <button data-method="offset" class="button button_shadow actions" onclick="myshow()">显示译文</button>
+                        <button data-method="offset" class="button button_shadow actions" onclick="myhide()">隐藏译文</button>
                         <div id="pass_form">
                             <form action="" id="passform">
                                 <div class="model-head">
