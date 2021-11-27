@@ -496,10 +496,12 @@ function getWordsAndTags(corpusId, isDone) {
         success: function(result) {
             localStorage.setItem("result", result);
             result = eval("(" + result + ")");
-            console.log("原文是："+result.data.originalText);
-            console.log("译文是："+result.data.translationText);
-            localStorage.setItem("yuan", splitLongText(result.data.originalText));
-            localStorage.setItem("yi", splitLongText(result.data.translationText));
+            // console.log("原文是："+result.data.originalText);
+            // console.log("译文是："+result.data.translationText);
+            if (result.data.originalText != undefined) {
+                localStorage.setItem("yuan", splitLongText(result.data.originalText));
+                localStorage.setItem("yi", splitLongText(result.data.translationText));
+            }
             // document.getElementById("result").innerHTML = localStorage.getItem("lastname");
 
             if (result.status === "success") {
