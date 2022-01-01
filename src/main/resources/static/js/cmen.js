@@ -1495,6 +1495,14 @@ var cmen = [{
                                 changeTag(this.getElementsByTagName("span")[1].innerHTML);
                             }
                         }
+                    },
+                    {
+                        "text": "mHc-NR&nbsp&nbsp&nbsp&nbsp&nbsp合词标记-NR",
+                        "events": {
+                            "click": function(e) {
+                                changeTag(this.getElementsByTagName("span")[1].innerHTML);
+                            }
+                        }
                     }
                 ]
             }
